@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main, master]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -10,9 +10,10 @@ permissions:
   pages: write
   id-token: write
 
+# 部署工作不可互相取消，否則會出現 "Deployment cancelled"
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
