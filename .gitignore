@@ -1,0 +1,33 @@
+# secrete files
+*.xlsx
+*.xls
+*.csv
+
+# Node
+node_modules/
+dist/
+*.local
+*.tsbuildinfo
+
+# AI assistant setting
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+DEPLOY.md
+
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+.python-version
+uv.lock
+
+# OS / editor
+.DS_Store
+*.swp
+*.swo
