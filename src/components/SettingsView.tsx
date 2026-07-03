@@ -107,24 +107,26 @@ export function SettingsView({
         </div>
         <div className="setcard">
           <div className="set-t">早班津貼（每日一次）</div>
-          <div className="set-d">依上班時刻判定；晚上上班的跨夜班不領津貼</div>
+          <div className="set-d">依上班時刻判定，時段可跨夜；時段內外各給一種金額</div>
           <div className="setrow">
+            <span>時段</span>
             <span className="setrow-left">
-              <span>上班早於</span>
-              <TimeInput value={s.early.tier1End} onChange={(n) => onChange({ ...s, early: { ...s.early, tier1End: n } })} />
+              <TimeInput value={s.early.windowStart} onChange={(n) => onChange({ ...s, early: { ...s.early, windowStart: n } })} />
+              <span className="unit">–</span>
+              <TimeInput value={s.early.windowEnd} onChange={(n) => onChange({ ...s, early: { ...s.early, windowEnd: n } })} />
             </span>
+          </div>
+          <div className="setrow">
+            <span>時段內上班</span>
             <span className="setrow-left">
-              <NumInput value={s.early.tier1Amount} onChange={(n) => onChange({ ...s, early: { ...s.early, tier1Amount: n } })} />
+              <NumInput value={s.early.windowAmount} onChange={(n) => onChange({ ...s, early: { ...s.early, windowAmount: n } })} />
               <span className="unit">元</span>
             </span>
           </div>
           <div className="setrow">
+            <span>其他時段上班</span>
             <span className="setrow-left">
-              <span>上班早於</span>
-              <TimeInput value={s.early.tier2End} onChange={(n) => onChange({ ...s, early: { ...s.early, tier2End: n } })} />
-            </span>
-            <span className="setrow-left">
-              <NumInput value={s.early.tier2Amount} onChange={(n) => onChange({ ...s, early: { ...s.early, tier2Amount: n } })} />
+              <NumInput value={s.early.otherAmount} onChange={(n) => onChange({ ...s, early: { ...s.early, otherAmount: n } })} />
               <span className="unit">元</span>
             </span>
           </div>

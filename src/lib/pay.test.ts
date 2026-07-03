@@ -11,7 +11,7 @@ const day = (code: string, paid = true) => {
 }
 
 describe('calcDay 實際出勤班別', () => {
-  it('5A 05:00–13:00：無凌晨加成、250 早班津貼', () => {
+  it('5A 05:00–13:00：無凌晨加成、05:00 整點上班已在時段外領 250', () => {
     const d = day('5A')
     expect(d).toMatchObject({ kind: 'work', hours: 8, base: 1800, night: 0, allowance: 250, total: 2050 })
   })
@@ -22,17 +22,20 @@ describe('calcDay 實際出勤班別', () => {
   it('4A 04:00–12:00：凌晨 60 分＝2×57、450 津貼', () => {
     expect(day('4A')).toMatchObject({ night: 114, allowance: 450 })
   })
-  it('23A 23:00–07:00 跨夜：凌晨 2 小時＝4×57、無早班津貼', () => {
-    expect(day('23A')).toMatchObject({ night: 228, allowance: 0, total: 2028 })
+  it('23A 23:00–07:00 跨夜：凌晨 2 小時＝4×57、450 津貼', () => {
+    expect(day('23A')).toMatchObject({ night: 228, allowance: 450, total: 2478 })
   })
-  it('21AH 21:30–05:30 跨夜：完整涵蓋凌晨時段＝228、無津貼', () => {
-    expect(day('21AH')).toMatchObject({ night: 228, allowance: 0 })
+  it('21AH 21:30–05:30 跨夜：完整涵蓋凌晨時段＝228、450 津貼', () => {
+    expect(day('21AH')).toMatchObject({ night: 228, allowance: 450 })
   })
-  it('19A 19:00–03:00 跨夜：結束於 03:00 恰好不重疊', () => {
-    expect(day('19A')).toMatchObject({ night: 0, allowance: 0, total: 1800 })
+  it('19A 19:00–03:00 跨夜：結束於 03:00 恰好不重疊、21:00 前上班領 250', () => {
+    expect(day('19A')).toMatchObject({ night: 0, allowance: 250, total: 2050 })
   })
-  it('21B 6 小時班 21:00–03:00：base 1350', () => {
-    expect(day('21B')).toMatchObject({ hours: 6, base: 1350, night: 0 })
+  it('21B 6 小時班 21:00–03:00：base 1350、21:00 整點上班領 450', () => {
+    expect(day('21B')).toMatchObject({ hours: 6, base: 1350, night: 0, allowance: 450 })
+  })
+  it('13A 13:00–21:00 午班：其他時段領 250', () => {
+    expect(day('13A')).toMatchObject({ night: 0, allowance: 250, total: 2050 })
   })
 })
 
