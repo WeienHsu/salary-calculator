@@ -28,8 +28,8 @@ export interface MonthPay {
   night: number
   nightHalfHours: number
   allowance: number
-  allowT1Days: number
-  allowT2Days: number
+  allowWindowDays: number
+  allowOtherDays: number
   total: number
 }
 
@@ -90,10 +90,13 @@ export function calcDay(
   const nightHalves = Math.floor(nightMin / 30)
   const night = nightHalves * s.night.per30min
 
-  // 早班津貼：依上班時刻分段（晚間上班的跨夜班起始時刻不在界線內，自然不領）
-  let allowance = 0
-  if (start < s.early.tier1End) allowance = s.early.tier1Amount
-  else if (start < s.early.tier2End) allowance = s.early.tier2Amount
+  // 早班津貼：依上班時刻判定，時段可跨夜（如 21:00–05:00 → windowStart > windowEnd）
+  const e = s.early
+  const inWindow =
+    e.windowStart <= e.windowEnd
+      ? def.start >= e.windowStart && def.start < e.windowEnd
+      : def.start >= e.windowStart || def.start < e.windowEnd
+  const allowance = inWindow ? e.windowAmount : e.otherAmount
 
   return {
     ...empty,
@@ -118,8 +121,8 @@ export function calcMonth(person: Person, weekdays: string[], s: Settings): Mont
     night: 0,
     nightHalfHours: 0,
     allowance: 0,
-    allowT1Days: 0,
-    allowT2Days: 0,
+    allowWindowDays: 0,
+    allowOtherDays: 0,
     total: 0,
   }
   person.days.forEach((code, i) => {
@@ -133,8 +136,8 @@ export function calcMonth(person: Person, weekdays: string[], s: Settings): Mont
       sum.night += d.night
       sum.allowance += d.allowance
       sum.total += d.total
-      if (d.allowance === s.early.tier1Amount && d.allowance > 0) sum.allowT1Days++
-      else if (d.allowance === s.early.tier2Amount && d.allowance > 0) sum.allowT2Days++
+      if (d.allowance === s.early.windowAmount && d.allowance > 0) sum.allowWindowDays++
+      else if (d.allowance === s.early.otherAmount && d.allowance > 0) sum.allowOtherDays++
     }
   })
   sum.nightHalfHours = s.night.per30min > 0 ? Math.round(sum.night / s.night.per30min) : 0

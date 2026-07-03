@@ -8,12 +8,12 @@ export interface Settings {
   rates: Record<Category, number>
   /** 凌晨加成：時段內每滿 30 分鐘加給 */
   night: { start: number; end: number; per30min: number }
-  /** 早班津貼：上班時刻 < tier1End 給 tier1Amount；否則 < tier2End 給 tier2Amount */
+  /** 早班津貼：上班時刻落在 windowStart–windowEnd（可跨夜）給 windowAmount；其他時段給 otherAmount */
   early: {
-    tier1End: number
-    tier1Amount: number
-    tier2End: number
-    tier2Amount: number
+    windowStart: number
+    windowEnd: number
+    windowAmount: number
+    otherAmount: number
   }
   /** 特殊代碼（特休/公差/受訓等）是否照帳面工時計薪 */
   specialPaid: Record<string, boolean>
@@ -25,7 +25,7 @@ export function defaultSettings(): Settings {
   return {
     rates: { 全職: 225, 時薪: 225, LNF: 225, 督導: 225 },
     night: { start: 180, end: 300, per30min: 57 },
-    early: { tier1End: 300, tier1Amount: 450, tier2End: 360, tier2Amount: 250 },
+    early: { windowStart: 1260, windowEnd: 300, windowAmount: 450, otherAmount: 250 },
     specialPaid,
   }
 }

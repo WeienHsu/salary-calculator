@@ -27,8 +27,8 @@ export function PersonView({
   const rate = settings.rates[person.category]
 
   const allowParts: string[] = []
-  if (pay.allowT1Days > 0) allowParts.push(`${settings.early.tier1Amount} 元 × ${pay.allowT1Days} 天`)
-  if (pay.allowT2Days > 0) allowParts.push(`${settings.early.tier2Amount} 元 × ${pay.allowT2Days} 天`)
+  if (pay.allowWindowDays > 0) allowParts.push(`${settings.early.windowAmount} 元 × ${pay.allowWindowDays} 天`)
+  if (pay.allowOtherDays > 0) allowParts.push(`${settings.early.otherAmount} 元 × ${pay.allowOtherDays} 天`)
 
   return (
     <>
